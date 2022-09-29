@@ -5,6 +5,7 @@ elixir:
 otp_release:
   - 24.3.4
   - 25.1
+dist: bionic
 notifications:
   recipients:
     - fastjames@gmail.com
