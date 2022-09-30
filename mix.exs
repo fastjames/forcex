@@ -71,7 +71,7 @@ defmodule Forcex.Mixfile do
       {:earmark, "~> 1.1", only: :dev, override: true},
       {:dialyxir, "~> 1.0.0-rc.3", only: [:dev, :test], runtime: false},
       {:mox, "~> 0.3", only: :test},
-      {:mix_test_watch, "~> 0.5", only: [:dev, :test], runtime: false},
+      {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
       {:html_entities, "~> 0.4"}
     ]
   end
