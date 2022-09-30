@@ -123,5 +123,5 @@ defmodule Forcex do
   defp format_body(""), do: ""
   defp format_body(body), do: Jason.encode!(body)
 
-  defp api_client, do: Application.get_env(:forcex, :api)
+  defp api_client, do: Application.get_env(:forcex, :api, Forcex.Api.Http)
 end
