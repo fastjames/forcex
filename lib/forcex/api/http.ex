@@ -32,7 +32,7 @@ defmodule Forcex.Api.Http do
         %{
           resp
           | body: :zlib.gunzip(body),
-            headers: List.keydelete(headers, "Content-Encoding", 0)
+            headers: List.delete(headers, {"Content-Encoding", "gzip"})
         }
         |> process_response()
 
