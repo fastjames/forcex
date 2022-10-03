@@ -70,7 +70,7 @@ defmodule Forcex.Mixfile do
       {:dialyxir, "~> 1.2.0", only: [:dev, :test], runtime: false},
       {:httpoison, "~> 1.0"},
       {:exjsx, "< 5.0.0"},
-      {:poison, "~> 2.0 or ~> 3.1"},
+      {:poison, "~> 2.0 or ~> 3.1 or ~> 5.0"},
       {:timex, "~> 2.0 or ~> 3.0"},
       {:erlsom, "~> 1.4"},
       {:excoveralls, "~> 0.5", only: :test},
