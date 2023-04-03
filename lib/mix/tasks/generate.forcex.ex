@@ -69,100 +69,39 @@ defmodule Mix.Tasks.Generate.Forcex do
 
     quote location: :keep do
       defmodule unquote(Module.concat(Forcex.SObject, name)) do
-        @moduledoc """
-        Dynamically generated module for `#{unquote(full_description.label)}`
-
-        ## Fields
-        #{unquote(for field <- full_description.fields, do: docs_for_field(field))}
-
-        """
-
-        @doc """
-        Retrieves extended metadata for `#{unquote(name)}`
-
-        See [SObject Describe](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_describe.htm)
-        """
         def describe(client) do
           unquote(describe_url)
           |> Forcex.get(client)
         end
 
-        @doc """
-        Retrieves basic metadata for `#{unquote(name)}`
-
-        See [SObject Basic Information](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_basic_info.htm)
-        """
         def basic_info(client) do
           unquote(sobject_url)
           |> Forcex.get(client)
         end
 
-        @doc """
-        Create a new `#{unquote(name)}`
-
-
-        Parameters
-        * `sobject` - a map of key/value pairs
-
-        See [SObject Basic Information](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_basic_info.htm)
-        """
         def create(sobject, client) when is_map(sobject) do
           unquote(sobject_url)
           |> Forcex.post(sobject, client)
         end
 
-        @doc """
-        Update an existing `#{unquote(name)}`
-
-        Parameters
-        * `id` - 18 character SFDC identifier.
-        * `changeset` - map of key/value pairs *only* of elements changing
-
-        See [SObject Rows](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_retrieve.htm)
-        """
         def update(id, changeset, client) do
           unquote(row_template_url)
           |> String.replace("{ID}", id)
           |> Forcex.patch(changeset, client)
         end
 
-        @doc """
-        Delete an existing `#{unquote(name)}`
-
-        Parameters
-        * `id` - 18 character SFDC identifier
-
-        See [SObject Rows](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_retrieve.htm)
-        """
         def delete(id, client) do
           unquote(row_template_url)
           |> String.replace("{ID}", id)
           |> Forcex.delete(client)
         end
 
-        @doc """
-        Retrieve an existing `#{unquote(name)}`
-
-        Parameters
-        * `id` - 18 character SFDC identifier
-
-        See [SObject Rows](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_retrieve.htm)
-        """
         def get(id, client) do
           unquote(row_template_url)
           |> String.replace("{ID}", id)
           |> Forcex.get(client)
         end
 
-        @doc """
-        Retrieve the IDs of `#{unquote(name)}`s deleted between `start_date` and `end_date`
-
-        Parameters
-        * `start_date` - `Timex.Convertable` or ISO8601 string
-        * `end_date` - `Timex.Convertable` or ISO8601 string
-
-        See [SObject Get Deleted](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_getdeleted.htm)
-        """
         def deleted_between(start_date, end_date, client)
             when is_binary(start_date) and is_binary(end_date) do
           params = %{"start" => start_date, "end" => end_date} |> URI.encode_query()
@@ -179,15 +118,6 @@ defmodule Mix.Tasks.Generate.Forcex do
           )
         end
 
-        @doc """
-        Retrieve the IDs of `#{unquote(name)}`s updated between `start_date` and `end_date`
-
-        Parameters
-        * `start_date` - `Timex.Convertable` or ISO8601 string
-        * `end_date` - `Timex.Convertable` or ISO8601 string
-
-        See [SObject Get Updated](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_getupdated.htm)
-        """
         def updated_between(start_date, end_date, client)
             when is_binary(start_date) and is_binary(end_date) do
           params = %{"start" => start_date, "end" => end_date} |> URI.encode_query()
@@ -204,51 +134,22 @@ defmodule Mix.Tasks.Generate.Forcex do
           )
         end
 
-        @doc """
-        Retrieve a binary field in `#{unquote(name)}`
-
-        Parameters
-        * `id` - 18 character SFDC identifier
-        * `field` - name of field with binary contents
-
-        See [SObject Blob Retrieve](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_blob_retrieve.htm)
-        """
         def get_blob(id, field, client) do
           (unquote(row_template_url) <> "/#{field}")
           |> String.replace("{ID}", id)
           |> Forcex.get(client)
         end
 
-        @doc """
-        Retrieve `#{unquote(name)}` records based on external field `field` having value `value`
-
-        Parameters
-        * `field` - name of external field
-        * `value` - value of `field` for desired records
-
-        See [SObject Rows by External ID](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_upsert.htm)
-        """
         def by_external(field, value, client) do
           (unquote(sobject_url) <> "/#{field}/#{value}")
           |> Forcex.get(client)
         end
 
-        @doc """
-        Upsert (create or update) a `#{unquote(name)}` based on external field `field`
-
-        Parameters
-        * `sobject` - map of key/value pairs
-        * `field` - name of external field
-        * `value` - value of `field` for desired records
-        See [SObject Rows by External ID](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_upsert_patch.htm)
-        """
         def upsert_by_external(sobject, field, value, client) when is_map(sobject) do
           (unquote(sobject_url) <> "/#{field}/#{value}")
           |> Forcex.patch(sobject, client)
         end
       end
-
-      IO.puts("Generated #{unquote(Module.concat(Forcex.SObject, name))}")
     end
   end
 
