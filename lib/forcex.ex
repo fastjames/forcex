@@ -23,7 +23,7 @@ defmodule Forcex do
     json_request(:post, url, body, headers ++ client.authorization_header, [])
   end
 
-  @spec patch(String.t(), String.t(), client) :: forcex_response
+  @spec patch(String.t(), map | String.t(), client) :: forcex_response
   def patch(path, body \\ "", client) do
     url = client.endpoint <> path
     headers = [{"Content-Type", "application/json"}]
